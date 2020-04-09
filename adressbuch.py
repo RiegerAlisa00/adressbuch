@@ -15,7 +15,9 @@ class GUI:
         
         """ Hauptseit: Listenbox """
         self.listbox = Listbox(self.surface)
-        
+        self.index = None
+        self.inhalt = None
+        self.scroll = Scrollbar(self.surface,orient=VERTICAL)
         """ Hauptseit: Label: Inhalt/Informationen der Person """
         self.label_info_person = Label(self.surface)
         
@@ -71,6 +73,7 @@ class GUI:
         self.b_sort_plz.grid_forget()
 
         self.listbox.grid_forget()
+        self.scroll.grid_forget()
 
         self.label_info_person.grid_forget()
 
@@ -135,27 +138,23 @@ class GUI:
         self.listbox.delete(0,'end')
         self.b_add.config(text='Add',command=self.add_side)
         self.b_edit.config(text='Edit',command=self.edit_side)
-        self.b_delete.config(text='Delete')
+        self.b_delete.config(text='Delete',command=self.delete_function)
         self.b_sort_name.config(text='Sort by name',command=self.name_sort)
         self.b_sort_plz.config(text='Sort by PLZ',command=self.plz_sort)
-        #B.grid(row=1,column=5)
 
-        scroll = Scrollbar(self.surface,command=self.listbox.yview)
-        self.listbox.configure(yscrollcommand=scroll.set)
-        #scrollbar_tk = Scrollbar(screen)
-        #scrollbar_tk.grid(row=1,column=5,rowspan=4)
-        #listbox_tk = Listbox(self.surface) #yscrollcommand=scrollbar_tk.set
+        
+        self.listbox["yscrollcommand"]=self.scroll.set
+        self.scroll["command"]=self.listbox.yview
         for i in self.addressbook.person_list:
             name = i.firstName, i.lastName
             self.listbox.insert(END, name)
-        self.listbox.grid(row=1,column=1,columnspan=4)
-        scroll.grid(row=1,column=4,rowspan=4)
-        #scrollbar_tk.config(command=listbox_tk.yview)
+        self.listbox.grid(row=1,column=1,columnspan=4,sticky=N+E+S+W)
+        self.scroll.grid(row=1,column=4, sticky=E+N+S)
+        self.listbox.bind("<<ListboxSelect>>",lambda x: self.listbox_active())
+        
+        
+        self.label_info_person.grid(row=1,column=5,rowspan=4,columnspan=10)
 
-
-        self.label_info_person.config(text='Hallo')
-        self.label_info_person.grid(row=1,column=6,rowspan=4,columnspan=10)
-        #print(self.listbox.curselection())
 
         
         self.b_add.grid(row=5,column=1,padx=10,pady=50)
@@ -163,6 +162,17 @@ class GUI:
         self.b_delete.grid(row=5,column=3,padx=10,pady=50)
         self.b_sort_name.grid(row=5,column=4,padx=10,pady=50)
         self.b_sort_plz.grid(row=5,column=5,padx=10,pady=50)
+    def delete_function(self):
+        self.addressbook.person_del(self.index)
+        self.main()
+    def listbox_active(self):
+        self.index = self.listbox.curselection()[0]
+        self.inhalt = self.addressbook.person_list[self.index]
+        self.edit_label_info_person_text()
+    def edit_label_info_person_text(self):
+        text="Vorname: {}\nNachname: {}\nAdresse: {}\nStadt: {}\nBundesland: {}\nPLZ: {}\nTelefonnummer: {}\n".format(self.inhalt.firstName,self.inhalt.lastName,self.inhalt.address,self.inhalt.city,self.inhalt.state,self.inhalt.plz,self.inhalt.phone)
+        self.label_info_person.config(text=text)
+        self.label_info_person["anchor"] = "w"
     def add_side(self):
         self.clear_design()
         self.label_add_firstName.config(text="Vorname")
@@ -221,6 +231,12 @@ class GUI:
         self.entry_add_state.delete(0,'end')
         self.entry_add_plz.delete(0,'end')
         self.entry_add_phone.delete(0,'end')
+    def delete_entry_edit_text(self):
+        self.entry_edit_address.delete(0,'end')
+        self.entry_edit_city.delete(0,'end')
+        self.entry_edit_state.delete(0,'end')
+        self.entry_edit_plz.delete(0,'end')
+        self.entry_edit_phone.delete(0,'end')
     def edit_side(self):
         self.clear_design()
         self.label_edit_firstName.config(text="Vorname")
@@ -245,24 +261,38 @@ class GUI:
         self.label_edit_phone.grid(row=7,column=1)
 
 
-        self.label_edit_info_firstName.config(text="Vorname")
+        self.label_edit_info_firstName.config(text=self.inhalt.firstName)
         self.label_edit_info_firstName.grid(row=1,column=2)
 
-        self.label_edit_info_lastName.config(text="Nachname")
+        self.label_edit_info_lastName.config(text=self.inhalt.lastName)
         self.label_edit_info_lastName.grid(row=2,column=2)
 
+        self.entry_edit_address.insert(0,self.inhalt.address)
         self.entry_edit_address.grid(row=3,column=2)
 
+        self.entry_edit_city.insert(0,self.inhalt.city)
         self.entry_edit_city.grid(row=4,column=2)
 
+        self.entry_edit_state.insert(0,self.inhalt.state)
         self.entry_edit_state.grid(row=5,column=2)
 
+        self.entry_edit_plz.insert(0,self.inhalt.plz)
         self.entry_edit_plz.grid(row=6,column=2)
 
+        self.entry_edit_phone.insert(0,self.inhalt.phone)
         self.entry_edit_phone.grid(row=7,column=2)
 
-        self.b_edit_save.config(text="Speichern",command=self.main)
+        self.b_edit_save.config(text="Speichern",command=self.person_edit)
         self.b_edit_save.grid(row=8,column=3)
+    def person_edit(self):
+        address = self.entry_edit_address.get()
+        city = self.entry_edit_city.get()
+        state = self.entry_edit_state.get()
+        plz = self.entry_edit_plz.get()
+        phone = self.entry_edit_phone.get()
+        self.inhalt.person_edit(address,city,state,plz,phone)
+        self.delete_entry_edit_text()
+        self.main()
 
 
 class Person:
@@ -311,20 +341,3 @@ surface = Tk()
 
 Addressbook = GUI(surface)
 Addressbook.menubar()
-
-
-# surface.mainloop()
-# person = Person(1,2,3,4,5,6,7)
-# person.person_print()
-# person.person_edit(8,9,10,11,12)
-# person.person_print()
-##adressbook = Addressbook()
-##adressbook.create_person('c','c','c','c','c','c','c')
-##adressbook.print_person()
-##adressbook.create_person('b','b','b','b','b','b','b')
-##adressbook.create_person('a','a','a','a','a','a','a')
-##adressbook.print_person()
-##adressbook.sort_name()
-##adressbook.print_person()
-##adressbook.person_del(0)
-##adressbook.print_person()
