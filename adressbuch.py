@@ -166,13 +166,16 @@ class GUI:
         self.addressbook.person_del(self.index)
         self.main()
     def listbox_active(self):
-        self.index = self.listbox.curselection()[0]
-        self.inhalt = self.addressbook.person_list[self.index]
-        self.edit_label_info_person_text()
+        try:
+            self.index = self.listbox.curselection()[0]
+            self.inhalt = self.addressbook.person_list[self.index]
+            self.edit_label_info_person_text()
+        except IndexError:
+            self.label_info_person.config(text='')
     def edit_label_info_person_text(self):
         text="Vorname: {}\nNachname: {}\nAdresse: {}\nStadt: {}\nBundesland: {}\nPLZ: {}\nTelefonnummer: {}\n".format(self.inhalt.firstName,self.inhalt.lastName,self.inhalt.address,self.inhalt.city,self.inhalt.state,self.inhalt.plz,self.inhalt.phone)
-        self.label_info_person.config(text=text)
-        self.label_info_person["anchor"] = "w"
+        self.label_info_person.config(text=text,justify=LEFT,font=13)
+        #self.label_info_person["anchor"] = W
     def add_side(self):
         self.clear_design()
         self.label_add_firstName.config(text="Vorname")
@@ -261,10 +264,10 @@ class GUI:
         self.label_edit_phone.grid(row=7,column=1)
 
 
-        self.label_edit_info_firstName.config(text=self.inhalt.firstName)
+        self.label_edit_info_firstName.config(text=self.inhalt.firstName,justify=LEFT)
         self.label_edit_info_firstName.grid(row=1,column=2)
 
-        self.label_edit_info_lastName.config(text=self.inhalt.lastName)
+        self.label_edit_info_lastName.config(text=self.inhalt.lastName,justify=LEFT)
         self.label_edit_info_lastName.grid(row=2,column=2)
 
         self.entry_edit_address.insert(0,self.inhalt.address)
