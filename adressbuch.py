@@ -1,10 +1,13 @@
 from tkinter import *
+import pickle
+from tkinter import filedialog
 
 class GUI:
     def __init__(self,surface):
         self.addressbook = Addressbook()
         """ GUI Fenster """
         self.surface = surface
+        self.title = None
         
         """ Hauptseit: Buttons """
         self.b_add = Button(self.surface)
@@ -121,6 +124,8 @@ class GUI:
         menubar = Menu(self.surface)
         filemenu = Menu(self.surface, tearoff=0)
         filemenu.add_command(label="New",command=self.main)
+        filemenu.add_command(label="Save As",command=self.object_save_as)
+        filemenu.add_command(label="Open",command=self.object_open)
         filemenu.add_separator()
         filemenu.add_command(label="Exit", command=self.surface.destroy)
         menubar.add_cascade(label="File", menu=filemenu)
@@ -134,6 +139,7 @@ class GUI:
         self.addressbook.sort_plz()
         self.main()
     def main(self):
+        self.surface.title(self.title)
         self.clear_design()
         self.listbox.delete(0,'end')
         self.b_add.config(text='Add',command=self.add_side)
@@ -296,7 +302,27 @@ class GUI:
         self.inhalt.person_edit(address,city,state,plz,phone)
         self.delete_entry_edit_text()
         self.main()
+    def object_save_as(self):
+  
+        self.surface.filename =  filedialog.asksaveasfile(title = "Save file",filetypes = (("pickle files","*.pickle"),("all files","*.*")))
+        filehandler = open(self.surface.filename.name, 'wb') 
+        pickle.dump(self.addressbook.person_list, filehandler)
+        self.title_name(self.surface.filename.name)
+        filehandler.close()
+        self.main()
+        
+    def object_open(self):
+        self.surface.filename =  filedialog.askopenfilename(title = "Select file",filetypes = (("pickle files","*.pickle"),("all files","*.*")))
+        read_file = open(self.surface.filename, 'rb')
+        self.addressbook.person_list = pickle.load(read_file)
+        self.title_name(self.surface.filename)
+        self.main()
 
+    def title_name(self,string):
+        end = string.find(".pickle")
+        start = string.rfind("/")
+        self.title = string[start+1:end]
+        print(self.title)
 
 class Person:
     def __init__(self,fname,lname,adr,city,state,plz,phone):
