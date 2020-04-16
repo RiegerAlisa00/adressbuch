@@ -7,8 +7,9 @@ class GUI:
         self.addressbook = Addressbook()
         """ GUI Fenster """
         self.surface = surface
-        self.title = None
-        
+        self.title = ''
+        """ Object save """
+        self.object_file_path = None
         """ Hauptseit: Buttons """
         self.b_add = Button(self.surface)
         self.b_edit = Button(self.surface)
@@ -123,7 +124,8 @@ class GUI:
     def menubar(self):
         menubar = Menu(self.surface)
         filemenu = Menu(self.surface, tearoff=0)
-        filemenu.add_command(label="New",command=self.main)
+        filemenu.add_command(label="New",command=self.object_new)
+        filemenu.add_command(label="Save",command=self.object_save)
         filemenu.add_command(label="Save As",command=self.object_save_as)
         filemenu.add_command(label="Open",command=self.object_open)
         filemenu.add_separator()
@@ -221,17 +223,50 @@ class GUI:
 
         self.b_add_save.config(text="Speichern",command=self.person_add)
         self.b_add_save.grid(row=8,column=3)
+    def check_entry(self,var,typ):
+        if typ == "state" or typ == "firstname" or typ == "lastname" or typ == "city" or typ == "address":
+            if var[0] == var[0].upper():
+                return True
+            else:
+                return False
+        elif typ == "plz":
+            return var.isnumeric()
+        elif typ == "phone":
+            if var.isnumeric():
+                return True
+            elif var.count("+") == 1 or var.count("/") == 1 or var.count("-") < 5:
+                return True
+            elif var.isalnum():
+                return False
+            else:
+                return False
+                
     def person_add(self):
         firstName = self.entry_add_firstName.get()
+        check_firstName = self.check_entry(firstName,"firstname")
+        
         lastName = self.entry_add_lastName.get()
+        check_lastName = self.check_entry(lastName,"lastname")
+        
         address = self.entry_add_address.get()
+        check_address = self.check_entry(address,"address")
+        
         city = self.entry_add_city.get()
+        check_city = self.check_entry(city,"city")
+        
         state = self.entry_add_state.get()
+        check_state = self.check_entry(state,"state")
+        
         plz = self.entry_add_plz.get()
+        check_plz = self.check_entry(plz,"plz")
+        
         phone = self.entry_add_phone.get()
-        self.addressbook.create_person(firstName,lastName,address,city,state,plz,phone)
-        self.delete_entry_add_text()
-        self.main()
+        check_phone = self.check_entry(phone,"phone")
+        
+        if check_firstName == True and check_lastName == True and check_address == True and check_city == True and check_state == True and check_plz == True and check_phone == True:
+            self.addressbook.create_person(firstName,lastName,address,city,state,plz,phone)
+            self.delete_entry_add_text()
+            self.main()
     def delete_entry_add_text(self):
         self.entry_add_firstName.delete(0,'end')
         self.entry_add_lastName.delete(0,'end')
@@ -303,26 +338,39 @@ class GUI:
         self.delete_entry_edit_text()
         self.main()
     def object_save_as(self):
-  
         self.surface.filename =  filedialog.asksaveasfile(title = "Save file",filetypes = (("pickle files","*.pickle"),("all files","*.*")))
-        filehandler = open(self.surface.filename.name, 'wb') 
+        self.object_file_path = self.surface.filename.name
+        filehandler = open(self.object_file_path, 'wb') 
         pickle.dump(self.addressbook.person_list, filehandler)
         self.title_name(self.surface.filename.name)
         filehandler.close()
         self.main()
-        
+
+    def object_save(self):
+        try:
+            filehandler = open(self.object_file_path, 'wb') 
+            pickle.dump(self.addressbook.person_list, filehandler)
+            self.title_name(self.surface.filename.name)
+            filehandler.close()
+            self.main()
+        except TypeError:
+            self.object_save_as()
     def object_open(self):
         self.surface.filename =  filedialog.askopenfilename(title = "Select file",filetypes = (("pickle files","*.pickle"),("all files","*.*")))
-        read_file = open(self.surface.filename, 'rb')
+        self.object_file_path = self.surface.filename
+        read_file = open(self.object_file_path, 'rb')
         self.addressbook.person_list = pickle.load(read_file)
         self.title_name(self.surface.filename)
         self.main()
-
+    def object_new(self):
+        self.object_file_path = None
+        self.title = ''
+        self.addressbook.person_list = []
+        self.main()
     def title_name(self,string):
         end = string.find(".pickle")
         start = string.rfind("/")
         self.title = string[start+1:end]
-        print(self.title)
 
 class Person:
     def __init__(self,fname,lname,adr,city,state,plz,phone):
