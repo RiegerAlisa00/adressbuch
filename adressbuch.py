@@ -68,7 +68,7 @@ class GUI:
         
         """ Edit_Seite: Speicher Button """
         self.b_edit_save = Button(self.surface)
-        
+    """clear_design: alles was aktuell im Fenster angezeigt wird, wird ausgeblendet"""    
     def clear_design(self):
         self.b_add.grid_forget()
         self.b_edit.grid_forget()
@@ -120,7 +120,7 @@ class GUI:
 
         self.b_edit_save .grid_forget()
 
-        
+    """menubar: hier wird die Menubar erstellt"""        
     def menubar(self):
         menubar = Menu(self.surface)
         filemenu = Menu(self.surface, tearoff=0)
