@@ -68,7 +68,7 @@ class GUI:
         
         """ Edit_Seite: Speicher Button """
         self.b_edit_save = Button(self.surface)
-    """clear_design: alles was aktuell im Fenster angezeigt wird, wird ausgeblendet"""    
+        
     def clear_design(self):
         self.b_add.grid_forget()
         self.b_edit.grid_forget()
@@ -120,7 +120,7 @@ class GUI:
 
         self.b_edit_save .grid_forget()
 
-    """menubar: hier wird die Menubar erstellt"""        
+        
     def menubar(self):
         menubar = Menu(self.surface)
         filemenu = Menu(self.surface, tearoff=0)
@@ -223,50 +223,68 @@ class GUI:
 
         self.b_add_save.config(text="Speichern",command=self.person_add)
         self.b_add_save.grid(row=8,column=3)
-    def check_entry(self,var,typ):
+    def check_entry(self,var,typ,entry):
+        i = 1
         if typ == "state" or typ == "firstname" or typ == "lastname" or typ == "city" or typ == "address":
             if var[0] == var[0].upper():
+                entry.config(background = "white")
                 return True
             else:
+                entry.config(background = "red")
                 return False
         elif typ == "plz":
-            return var.isnumeric()
+            if var.isnumeric():
+                entry.config(background = "white")
+                return var.isnumeric()
+            else:
+                entry.config(background = "red")
+                return var.isnumeric()
+            
         elif typ == "phone":
             if var.isnumeric():
+                entry.config(background = "pink")
                 return True
-            elif var.count("+") == 1 or var.count("/") == 1 or var.count("-") < 5:
-                return True
+            #elif var.count("+") == 1 or var.count("/") == 1 or var.count("-") < 5:
+                #print(var.count("+"))
+                #print(var.count("/"))
+                #print(var.count("-"))
+                #entry.config(background = "black")
+                #return True
             elif var.isalnum():
+                entry.config(background = "red")
                 return False
             else:
+                entry.config(background = "red")
                 return False
                 
     def person_add(self):
         firstName = self.entry_add_firstName.get()
-        check_firstName = self.check_entry(firstName,"firstname")
+        check_firstName = self.check_entry(firstName,"firstname",self.entry_add_firstName)
         
         lastName = self.entry_add_lastName.get()
-        check_lastName = self.check_entry(lastName,"lastname")
+        check_lastName = self.check_entry(lastName,"lastname",self.entry_add_lastName)
         
         address = self.entry_add_address.get()
-        check_address = self.check_entry(address,"address")
+        check_address = self.check_entry(address,"address",self.entry_add_address)
         
         city = self.entry_add_city.get()
-        check_city = self.check_entry(city,"city")
+        check_city = self.check_entry(city,"city",self.entry_add_city)
         
         state = self.entry_add_state.get()
-        check_state = self.check_entry(state,"state")
+        check_state = self.check_entry(state,"state",self.entry_add_state)
         
         plz = self.entry_add_plz.get()
-        check_plz = self.check_entry(plz,"plz")
+        check_plz = self.check_entry(plz,"plz",self.entry_add_plz)
         
         phone = self.entry_add_phone.get()
-        check_phone = self.check_entry(phone,"phone")
+        check_phone = self.check_entry(phone,"phone",self.entry_add_phone)
         
         if check_firstName == True and check_lastName == True and check_address == True and check_city == True and check_state == True and check_plz == True and check_phone == True:
             self.addressbook.create_person(firstName,lastName,address,city,state,plz,phone)
             self.delete_entry_add_text()
             self.main()
+        else:
+            self.person_add()
     def delete_entry_add_text(self):
         self.entry_add_firstName.delete(0,'end')
         self.entry_add_lastName.delete(0,'end')
@@ -330,13 +348,26 @@ class GUI:
         self.b_edit_save.grid(row=8,column=3)
     def person_edit(self):
         address = self.entry_edit_address.get()
+        check_address = self.check_entry(address,"address",self.entry_edit_address)
+        
         city = self.entry_edit_city.get()
+        check_city = self.check_entry(city,"city",self.entry_edit_city)
+        
         state = self.entry_edit_state.get()
+        check_state = self.check_entry(state,"state",self.entry_edit_state)
+        
         plz = self.entry_edit_plz.get()
+        check_plz = self.check_entry(plz,"plz",self.entry_edit_plz)
+        
         phone = self.entry_edit_phone.get()
-        self.inhalt.person_edit(address,city,state,plz,phone)
-        self.delete_entry_edit_text()
-        self.main()
+        check_phone = self.check_entry(phone,"phone",self.entry_add_phone)
+        
+        if check_address == True and check_city == True and check_state == True and check_plz == True and check_phone == True:
+            self.inhalt.person_edit(address,city,state,plz,phone)
+            self.delete_entry_edit_text()
+            self.main()
+        else:
+            self.person_edit()
     def object_save_as(self):
         self.surface.filename =  filedialog.asksaveasfile(title = "Save file",filetypes = (("pickle files","*.pickle"),("all files","*.*")))
         self.object_file_path = self.surface.filename.name
