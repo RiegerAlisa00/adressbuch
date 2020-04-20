@@ -242,7 +242,7 @@ class GUI:
             
         elif typ == "phone":
             if var.isnumeric():
-                entry.config(background = "pink")
+                entry.config(background = "white")
                 return True
             #elif var.count("+") == 1 or var.count("/") == 1 or var.count("-") < 5:
                 #print(var.count("+"))
