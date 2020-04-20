@@ -24,6 +24,15 @@ class GUI:
         self.scroll = Scrollbar(self.surface,orient=VERTICAL)
         """ Hauptseit: Label: Inhalt/Informationen der Person """
         self.label_info_person = Label(self.surface)
+
+        """Eingabe Informationen: Labels"""
+        self.label_info_firstName = Label(self.surface)
+        self.label_info_lastName = Label(self.surface)
+        self.label_info_address = Label(self.surface)
+        self.label_info_city = Label(self.surface)
+        self.label_info_state = Label(self.surface)
+        self.label_info_plz = Label(self.surface)
+        self.label_info_phone = Label(self.surface)
         
         """ Add_Seite: Labels """
         self.label_add_firstName = Label(self.surface)
@@ -80,6 +89,14 @@ class GUI:
         self.scroll.grid_forget()
 
         self.label_info_person.grid_forget()
+
+        self.label_info_firstName.grid_forget()
+        self.label_info_lastName.grid_forget()
+        self.label_info_address.grid_forget()
+        self.label_info_city.grid_forget()
+        self.label_info_state.grid_forget()
+        self.label_info_plz.grid_forget()
+        self.label_info_phone.grid_forget()
 
         self.label_add_firstName.grid_forget()
         self.label_add_lastName.grid_forget()
@@ -220,29 +237,57 @@ class GUI:
         self.entry_add_plz.grid(row=6,column=2)
 
         self.entry_add_phone.grid(row=7,column=2)
+        
+        info_text = " muss mit einem Großbuchstaben anfangen"
+        info_zahl = " darf nur aus Zahlen bestehen"
+        self.label_info_firstName.config(text="Vorname"+info_text)
+        self.label_info_firstName.grid(row=1,column=3)
+
+        self.label_info_lastName.config(text="Nachname"+info_text)
+        self.label_info_lastName.grid(row=2,column=3)
+
+        self.label_info_address.config(text="Adresse"+info_text)
+        self.label_info_address.grid(row=3,column=3)
+
+        self.label_info_city.config(text="Stadt"+info_text)
+        self.label_info_city.grid(row=4,column=3)
+
+        self.label_info_state.config(text="Bundesland"+info_text)
+        self.label_info_state.grid(row=5,column=3)
+
+        self.label_info_plz.config(text="PLZ"+info_zahl)
+        self.label_info_plz.grid(row=6,column=3)
+
+        self.label_info_phone.config(text="Telefonnummer"+info_zahl)
+        self.label_info_phone.grid(row=7,column=3)
 
         self.b_add_save.config(text="Speichern",command=self.person_add)
         self.b_add_save.grid(row=8,column=3)
-    def check_entry(self,var,typ,entry):
+    def check_entry(self,var,typ,entry,info):
         i = 1
         if typ == "state" or typ == "firstname" or typ == "lastname" or typ == "city" or typ == "address":
             if var[0] == var[0].upper():
                 entry.config(background = "white")
+                info.config(fg = "black")
                 return True
             else:
                 entry.config(background = "red")
+                info.config(fg = "red",text="Fängt nicht mit einem Großbuchstaben an")
                 return False
         elif typ == "plz":
             if var.isnumeric():
                 entry.config(background = "white")
+                info.config(fg = "black")
                 return var.isnumeric()
             else:
                 entry.config(background = "red")
+                info.config(fg = "red",text="Besteht nicht nur aus Zahlen")
                 return var.isnumeric()
             
         elif typ == "phone":
             if var.isnumeric():
                 entry.config(background = "white")
+                info.config(fg = "black")
                 return True
             #elif var.count("+") == 1 or var.count("/") == 1 or var.count("-") < 5:
                 #print(var.count("+"))
@@ -252,32 +297,34 @@ class GUI:
                 #return True
             elif var.isalnum():
                 entry.config(background = "red")
+                info.config(fg = "red",text="Besteht nicht nur aus Zahlen")
                 return False
             else:
                 entry.config(background = "red")
+                info.config(fg = "red",text="Besteht nicht nur aus Zahlen")
                 return False
                 
     def person_add(self):
         firstName = self.entry_add_firstName.get()
-        check_firstName = self.check_entry(firstName,"firstname",self.entry_add_firstName)
+        check_firstName = self.check_entry(firstName,"firstname",self.entry_add_firstName,self.label_info_firstName)
         
         lastName = self.entry_add_lastName.get()
-        check_lastName = self.check_entry(lastName,"lastname",self.entry_add_lastName)
+        check_lastName = self.check_entry(lastName,"lastname",self.entry_add_lastName,self.label_info_lastName)
         
         address = self.entry_add_address.get()
-        check_address = self.check_entry(address,"address",self.entry_add_address)
+        check_address = self.check_entry(address,"address",self.entry_add_address,self.label_info_address)
         
         city = self.entry_add_city.get()
-        check_city = self.check_entry(city,"city",self.entry_add_city)
+        check_city = self.check_entry(city,"city",self.entry_add_city,self.label_info_city)
         
         state = self.entry_add_state.get()
-        check_state = self.check_entry(state,"state",self.entry_add_state)
+        check_state = self.check_entry(state,"state",self.entry_add_state,self.label_info_state)
         
         plz = self.entry_add_plz.get()
-        check_plz = self.check_entry(plz,"plz",self.entry_add_plz)
+        check_plz = self.check_entry(plz,"plz",self.entry_add_plz,self.label_info_plz)
         
         phone = self.entry_add_phone.get()
-        check_phone = self.check_entry(phone,"phone",self.entry_add_phone)
+        check_phone = self.check_entry(phone,"phone",self.entry_add_phone,self.label_info_phone)
         
         if check_firstName == True and check_lastName == True and check_address == True and check_city == True and check_state == True and check_plz == True and check_phone == True:
             self.addressbook.create_person(firstName,lastName,address,city,state,plz,phone)
@@ -344,23 +391,42 @@ class GUI:
         self.entry_edit_phone.insert(0,self.inhalt.phone)
         self.entry_edit_phone.grid(row=7,column=2)
 
+        info_text = " muss mit einem Großbuchstaben anfangen"
+        info_zahl = " darf nur aus Zahlen bestehen"
+        
+
+        self.label_info_address.config(text="Adresse"+info_text)
+        self.label_info_address.grid(row=3,column=3)
+
+        self.label_info_city.config(text="Stadt"+info_text)
+        self.label_info_city.grid(row=4,column=3)
+
+        self.label_info_state.config(text="Bundesland"+info_text)
+        self.label_info_state.grid(row=5,column=3)
+
+        self.label_info_plz.config(text="PLZ"+info_zahl)
+        self.label_info_plz.grid(row=6,column=3)
+
+        self.label_info_phone.config(text="Telefonnummer"+info_zahl)
+        self.label_info_phone.grid(row=7,column=3)
+
         self.b_edit_save.config(text="Speichern",command=self.person_edit)
         self.b_edit_save.grid(row=8,column=3)
     def person_edit(self):
         address = self.entry_edit_address.get()
-        check_address = self.check_entry(address,"address",self.entry_edit_address)
+        check_address = self.check_entry(address,"address",self.entry_edit_address,self.label_info_address)
         
         city = self.entry_edit_city.get()
-        check_city = self.check_entry(city,"city",self.entry_edit_city)
+        check_city = self.check_entry(city,"city",self.entry_edit_city,self.label_info_city)
         
         state = self.entry_edit_state.get()
-        check_state = self.check_entry(state,"state",self.entry_edit_state)
+        check_state = self.check_entry(state,"state",self.entry_edit_state,self.label_info_state)
         
         plz = self.entry_edit_plz.get()
-        check_plz = self.check_entry(plz,"plz",self.entry_edit_plz)
+        check_plz = self.check_entry(plz,"plz",self.entry_edit_plz,self.label_info_plz)
         
         phone = self.entry_edit_phone.get()
-        check_phone = self.check_entry(phone,"phone",self.entry_add_phone)
+        check_phone = self.check_entry(phone,"phone",self.entry_edit_phone,self.label_info_phone)
         
         if check_address == True and check_city == True and check_state == True and check_plz == True and check_phone == True:
             self.inhalt.person_edit(address,city,state,plz,phone)
@@ -397,6 +463,8 @@ class GUI:
         self.object_file_path = None
         self.title = ''
         self.addressbook.person_list = []
+        #self.label_info_person.config(text="")
+        self.listbox_active()
         self.main()
     def title_name(self,string):
         end = string.find(".pickle")
