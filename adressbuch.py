@@ -161,10 +161,14 @@ class GUI:
         self.listbox_active()
         self.surface.title(self.title)
         self.clear_design()
+        if len(self.addressbook.person_list) < 1:
+            self.b_edit.config(text='Edit',command=self.main)
+            self.b_delete.config(text='Delete',command=self.main)
+        else:
+            self.b_edit.config(text='Edit',command=self.edit_side)
+            self.b_delete.config(text='Delete',command=self.delete_function)
         self.listbox.delete(0,'end')
         self.b_add.config(text='Add',command=self.add_side)
-        self.b_edit.config(text='Edit',command=self.edit_side)
-        self.b_delete.config(text='Delete',command=self.delete_function)
         self.b_sort_name.config(text='Sort by name',command=self.name_sort)
         self.b_sort_plz.config(text='Sort by PLZ',command=self.plz_sort)
 
