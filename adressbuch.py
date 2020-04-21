@@ -506,10 +506,10 @@ class GUI:
             self.person_edit()
     def object_save_as(self):
         self.surface.filename =  filedialog.asksaveasfile(title = "Save file",filetypes = (("pickle files","*.pickle"),("all files","*.*")))
-        self.object_file_path = self.surface.filename.name
+        self.object_file_path = self.surface.filename.name+'.pickle'
         filehandler = open(self.object_file_path, 'wb') 
         pickle.dump(self.addressbook.person_list, filehandler)
-        self.title_name(self.surface.filename.name)
+        self.title_name(self.object_file_path)
         filehandler.close()
         self.main()
 
@@ -517,7 +517,7 @@ class GUI:
         try:
             filehandler = open(self.object_file_path, 'wb') 
             pickle.dump(self.addressbook.person_list, filehandler)
-            self.title_name(self.surface.filename.name)
+            self.title_name(self.object_file_path)
             filehandler.close()
             self.main()
         except TypeError:
