@@ -158,6 +158,7 @@ class GUI:
         self.addressbook.sort_plz()
         self.main()
     def main(self):
+        self.listbox_active()
         self.surface.title(self.title)
         self.clear_design()
         self.listbox.delete(0,'end')
@@ -348,70 +349,139 @@ class GUI:
         self.entry_edit_phone.delete(0,'end')
     def edit_side(self):
         self.clear_design()
-        self.label_edit_firstName.config(text="Vorname")
-        self.label_edit_firstName.grid(row=1,column=1)
+        if len(self.addressbook.person_list) < 1:
+            self.index = None
+            self.inhalt = None
+        try:
+            self.label_edit_firstName.config(text="Vorname")
+            self.label_edit_firstName.grid(row=1,column=1)
 
-        self.label_edit_lastName.config(text="Nachname")
-        self.label_edit_lastName.grid(row=2,column=1)
+            self.label_edit_lastName.config(text="Nachname")
+            self.label_edit_lastName.grid(row=2,column=1)
 
-        self.label_edit_address.config(text="Adresse")
-        self.label_edit_address.grid(row=3,column=1)
+            self.label_edit_address.config(text="Adresse")
+            self.label_edit_address.grid(row=3,column=1)
 
-        self.label_edit_city.config(text="Stadt")
-        self.label_edit_city.grid(row=4,column=1)
+            self.label_edit_city.config(text="Stadt")
+            self.label_edit_city.grid(row=4,column=1)
 
-        self.label_edit_state.config(text="Bundesland")
-        self.label_edit_state.grid(row=5,column=1)
+            self.label_edit_state.config(text="Bundesland")
+            self.label_edit_state.grid(row=5,column=1)
 
-        self.label_edit_plz.config(text="PLZ")
-        self.label_edit_plz.grid(row=6,column=1)
+            self.label_edit_plz.config(text="PLZ")
+            self.label_edit_plz.grid(row=6,column=1)
 
-        self.label_edit_phone.config(text="Telefonnummer")
-        self.label_edit_phone.grid(row=7,column=1)
+            self.label_edit_phone.config(text="Telefonnummer")
+            self.label_edit_phone.grid(row=7,column=1)
 
 
-        self.label_edit_info_firstName.config(text=self.inhalt.firstName,justify=LEFT)
-        self.label_edit_info_firstName.grid(row=1,column=2)
+            self.label_edit_info_firstName.config(text=self.inhalt.firstName,justify=LEFT)
+            self.label_edit_info_firstName.grid(row=1,column=2)
 
-        self.label_edit_info_lastName.config(text=self.inhalt.lastName,justify=LEFT)
-        self.label_edit_info_lastName.grid(row=2,column=2)
+            self.label_edit_info_lastName.config(text=self.inhalt.lastName,justify=LEFT)
+            self.label_edit_info_lastName.grid(row=2,column=2)
 
-        self.entry_edit_address.insert(0,self.inhalt.address)
-        self.entry_edit_address.grid(row=3,column=2)
+            self.entry_edit_address.insert(0,self.inhalt.address)
+            self.entry_edit_address.grid(row=3,column=2)
 
-        self.entry_edit_city.insert(0,self.inhalt.city)
-        self.entry_edit_city.grid(row=4,column=2)
+            self.entry_edit_city.insert(0,self.inhalt.city)
+            self.entry_edit_city.grid(row=4,column=2)
 
-        self.entry_edit_state.insert(0,self.inhalt.state)
-        self.entry_edit_state.grid(row=5,column=2)
+            self.entry_edit_state.insert(0,self.inhalt.state)
+            self.entry_edit_state.grid(row=5,column=2)
 
-        self.entry_edit_plz.insert(0,self.inhalt.plz)
-        self.entry_edit_plz.grid(row=6,column=2)
+            self.entry_edit_plz.insert(0,self.inhalt.plz)
+            self.entry_edit_plz.grid(row=6,column=2)
 
-        self.entry_edit_phone.insert(0,self.inhalt.phone)
-        self.entry_edit_phone.grid(row=7,column=2)
+            self.entry_edit_phone.insert(0,self.inhalt.phone)
+            self.entry_edit_phone.grid(row=7,column=2)
 
-        info_text = " muss mit einem Großbuchstaben anfangen"
-        info_zahl = " darf nur aus Zahlen bestehen"
-        
+            info_text = " muss mit einem Großbuchstaben anfangen"
+            info_zahl = " darf nur aus Zahlen bestehen"
+            
 
-        self.label_info_address.config(text="Adresse"+info_text)
-        self.label_info_address.grid(row=3,column=3)
+            self.label_info_address.config(text="Adresse"+info_text)
+            self.label_info_address.grid(row=3,column=3)
 
-        self.label_info_city.config(text="Stadt"+info_text)
-        self.label_info_city.grid(row=4,column=3)
+            self.label_info_city.config(text="Stadt"+info_text)
+            self.label_info_city.grid(row=4,column=3)
 
-        self.label_info_state.config(text="Bundesland"+info_text)
-        self.label_info_state.grid(row=5,column=3)
+            self.label_info_state.config(text="Bundesland"+info_text)
+            self.label_info_state.grid(row=5,column=3)
 
-        self.label_info_plz.config(text="PLZ"+info_zahl)
-        self.label_info_plz.grid(row=6,column=3)
+            self.label_info_plz.config(text="PLZ"+info_zahl)
+            self.label_info_plz.grid(row=6,column=3)
 
-        self.label_info_phone.config(text="Telefonnummer"+info_zahl)
-        self.label_info_phone.grid(row=7,column=3)
+            self.label_info_phone.config(text="Telefonnummer"+info_zahl)
+            self.label_info_phone.grid(row=7,column=3)
 
-        self.b_edit_save.config(text="Speichern",command=self.person_edit)
-        self.b_edit_save.grid(row=8,column=3)
+            self.b_edit_save.config(text="Speichern",command=self.person_edit)
+            self.b_edit_save.grid(row=8,column=3)
+        except AttributeError:
+            self.label_edit_firstName.config(text="Vorname")
+            self.label_edit_firstName.grid(row=1,column=1)
+
+            self.label_edit_lastName.config(text="Nachname")
+            self.label_edit_lastName.grid(row=2,column=1)
+
+            self.label_edit_address.config(text="Adresse")
+            self.label_edit_address.grid(row=3,column=1)
+
+            self.label_edit_city.config(text="Stadt")
+            self.label_edit_city.grid(row=4,column=1)
+
+            self.label_edit_state.config(text="Bundesland")
+            self.label_edit_state.grid(row=5,column=1)
+
+            self.label_edit_plz.config(text="PLZ")
+            self.label_edit_plz.grid(row=6,column=1)
+
+            self.label_edit_phone.config(text="Telefonnummer")
+            self.label_edit_phone.grid(row=7,column=1)
+
+
+            self.label_edit_info_firstName.config(text='',justify=LEFT)
+            self.label_edit_info_firstName.grid(row=1,column=2)
+
+            self.label_edit_info_lastName.config(text='',justify=LEFT)
+            self.label_edit_info_lastName.grid(row=2,column=2)
+
+            self.entry_edit_address.insert(0,'')
+            self.entry_edit_address.grid(row=3,column=2)
+
+            self.entry_edit_city.insert(0,'')
+            self.entry_edit_city.grid(row=4,column=2)
+
+            self.entry_edit_state.insert(0,'')
+            self.entry_edit_state.grid(row=5,column=2)
+
+            self.entry_edit_plz.insert(0,'')
+            self.entry_edit_plz.grid(row=6,column=2)
+
+            self.entry_edit_phone.insert(0,'')
+            self.entry_edit_phone.grid(row=7,column=2)
+
+            info_text = " muss mit einem Großbuchstaben anfangen"
+            info_zahl = " darf nur aus Zahlen bestehen"
+            
+
+            self.label_info_address.config(text="Adresse"+info_text)
+            self.label_info_address.grid(row=3,column=3)
+
+            self.label_info_city.config(text="Stadt"+info_text)
+            self.label_info_city.grid(row=4,column=3)
+
+            self.label_info_state.config(text="Bundesland"+info_text)
+            self.label_info_state.grid(row=5,column=3)
+
+            self.label_info_plz.config(text="PLZ"+info_zahl)
+            self.label_info_plz.grid(row=6,column=3)
+
+            self.label_info_phone.config(text="Telefonnummer"+info_zahl)
+            self.label_info_phone.grid(row=7,column=3)
+
+            self.b_edit_save.config(text="Speichern",command=self.main)
+            self.b_edit_save.grid(row=8,column=3)
     def person_edit(self):
         address = self.entry_edit_address.get()
         check_address = self.check_entry(address,"address",self.entry_edit_address,self.label_info_address)
@@ -465,6 +535,8 @@ class GUI:
         self.addressbook.person_list = []
         #self.label_info_person.config(text="")
         self.listbox_active()
+        #self.index = None
+        #self.inhalt = None
         self.main()
     def title_name(self,string):
         end = string.find(".pickle")
