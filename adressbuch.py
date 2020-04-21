@@ -1,6 +1,7 @@
 from tkinter import *
 import pickle
 from tkinter import filedialog
+import os
 
 class GUI:
     def __init__(self,surface):
@@ -269,15 +270,35 @@ class GUI:
         self.b_add_save.config(text="Speichern",command=self.person_add)
         self.b_add_save.grid(row=8,column=3)
     def check_entry(self,var,typ,entry,info):
-        i = 1
-        if typ == "state" or typ == "firstname" or typ == "lastname" or typ == "city" or typ == "address":
-            if var[0] == var[0].upper():
-                entry.config(background = "white")
-                info.config(fg = "black")
-                return True
+        info_text ="Fängt nicht mit einem Großbuchstaben an oder das Feld ist leer"
+        info_zahl = "Besteht nicht nur aus Zahlen oder das Feld ist leer"
+        if typ == "state" or typ == "firstname" or typ == "lastname" or typ == "city":
+            if var.isalpha():
+                if var[0] == var[0].upper():
+                    entry.config(background = "white")
+                    info.config(fg = "black")
+                    return True
+                else:
+                    entry.config(background = "red")
+                    info.config(fg = "red",text=info_text)
+                    return False
             else:
                 entry.config(background = "red")
-                info.config(fg = "red",text="Fängt nicht mit einem Großbuchstaben an")
+                info.config(fg = "red",text=info_text)
+                return False
+        elif typ == "address":
+            if var.isalnum():
+                if var[0] == var[0].upper():
+                    entry.config(background = "white")
+                    info.config(fg = "black")
+                    return True
+                else:
+                    entry.config(background = "red")
+                    info.config(fg = "red",text=info_text)
+                    return False
+            else:
+                entry.config(background = "red")
+                info.config(fg = "red",text=info_text)
                 return False
         elif typ == "plz":
             if var.isnumeric():
@@ -286,7 +307,7 @@ class GUI:
                 return var.isnumeric()
             else:
                 entry.config(background = "red")
-                info.config(fg = "red",text="Besteht nicht nur aus Zahlen")
+                info.config(fg = "red",text=info_zahl)
                 return var.isnumeric()
             
         elif typ == "phone":
@@ -302,41 +323,39 @@ class GUI:
                 #return True
             elif var.isalnum():
                 entry.config(background = "red")
-                info.config(fg = "red",text="Besteht nicht nur aus Zahlen")
+                info.config(fg = "red",text=info_zahl)
                 return False
             else:
                 entry.config(background = "red")
-                info.config(fg = "red",text="Besteht nicht nur aus Zahlen")
+                info.config(fg = "red",text=info_zahl)
                 return False
                 
     def person_add(self):
         firstName = self.entry_add_firstName.get()
-        check_firstName = self.check_entry(firstName,"firstname",self.entry_add_firstName,self.label_info_firstName)
-        
         lastName = self.entry_add_lastName.get()
-        check_lastName = self.check_entry(lastName,"lastname",self.entry_add_lastName,self.label_info_lastName)
-        
         address = self.entry_add_address.get()
-        check_address = self.check_entry(address,"address",self.entry_add_address,self.label_info_address)
-        
         city = self.entry_add_city.get()
-        check_city = self.check_entry(city,"city",self.entry_add_city,self.label_info_city)
-        
         state = self.entry_add_state.get()
-        check_state = self.check_entry(state,"state",self.entry_add_state,self.label_info_state)
-        
         plz = self.entry_add_plz.get()
-        check_plz = self.check_entry(plz,"plz",self.entry_add_plz,self.label_info_plz)
-        
         phone = self.entry_add_phone.get()
-        check_phone = self.check_entry(phone,"phone",self.entry_add_phone,self.label_info_phone)
         
-        if check_firstName == True and check_lastName == True and check_address == True and check_city == True and check_state == True and check_plz == True and check_phone == True:
-            self.addressbook.create_person(firstName,lastName,address,city,state,plz,phone)
-            self.delete_entry_add_text()
+        if firstName =="" and lastName == "" and address == "" and city == "" and state == "" and plz == "" and phone == "":
             self.main()
         else:
-            self.person_add()
+            check_firstName = self.check_entry(firstName,"firstname",self.entry_add_firstName,self.label_info_firstName)
+            check_lastName = self.check_entry(lastName,"lastname",self.entry_add_lastName,self.label_info_lastName)
+            check_address = self.check_entry(address,"address",self.entry_add_address,self.label_info_address)
+            check_city = self.check_entry(city,"city",self.entry_add_city,self.label_info_city)
+            check_state = self.check_entry(state,"state",self.entry_add_state,self.label_info_state)
+            check_plz = self.check_entry(plz,"plz",self.entry_add_plz,self.label_info_plz)
+            check_phone = self.check_entry(phone,"phone",self.entry_add_phone,self.label_info_phone)
+            
+            if check_firstName == True and check_lastName == True and check_address == True and check_city == True and check_state == True and check_plz == True and check_phone == True:
+                self.addressbook.create_person(firstName,lastName,address,city,state,plz,phone)
+                self.delete_entry_add_text()
+                self.main()
+            else:
+                self.person_add()
     def delete_entry_add_text(self):
         self.entry_add_firstName.delete(0,'end')
         self.entry_add_lastName.delete(0,'end')
@@ -515,6 +534,7 @@ class GUI:
         pickle.dump(self.addressbook.person_list, filehandler)
         self.title_name(self.object_file_path)
         filehandler.close()
+        
         self.main()
 
     def object_save(self):
