@@ -1,7 +1,6 @@
 from tkinter import *
 import pickle
 from tkinter import filedialog
-import os
 
 class GUI:
     def __init__(self,surface):
@@ -155,6 +154,7 @@ class GUI:
     def name_sort(self):
         self.addressbook.sort_name()
         self.main()
+    
     def plz_sort(self):
         self.addressbook.sort_plz()
         self.main()
@@ -528,13 +528,12 @@ class GUI:
         else:
             self.person_edit()
     def object_save_as(self):
-        self.surface.filename =  filedialog.asksaveasfile(title = "Save file",filetypes = (("pickle files","*.pickle"),("all files","*.*")))
-        self.object_file_path = self.surface.filename.name+'.pickle'
+        self.surface.filename =  filedialog.asksaveasfile(title = "Save file",defaultextension = '.pickle',filetypes = (("pickle files","*.pickle"),("all files","*.*")))
+        self.object_file_path = self.surface.filename.name
         filehandler = open(self.object_file_path, 'wb') 
         pickle.dump(self.addressbook.person_list, filehandler)
         self.title_name(self.object_file_path)
         filehandler.close()
-        
         self.main()
 
     def object_save(self):
