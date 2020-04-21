@@ -158,10 +158,23 @@ class GUI:
     def plz_sort(self):
         self.addressbook.sort_plz()
         self.main()
+    def lable_info_text(self):
+        info_text = " muss mit einem Großbuchstaben anfangen"
+        info_zahl = " darf nur aus Zahlen bestehen"
+        self.label_info_firstName.config(text="Vorname"+info_text,fg = "black")
+        self.label_info_lastName.config(text="Nachname"+info_text,fg = "black")
+        self.label_info_address.config(text="Adresse"+info_text,fg = "black")
+        self.label_info_city.config(text="Stadt"+info_text,fg = "black")
+        self.label_info_state.config(text="Bundesland"+info_text,fg = "black")
+        self.label_info_plz.config(text="PLZ"+info_zahl,fg = "black")
+        self.label_info_phone.config(text="Telefonnummer"+info_zahl,fg = "black")
     def main(self):
         self.listbox_active()
         self.surface.title(self.title)
         self.clear_design()
+        self.delete_entry_add_text()
+        self.delete_entry_edit_text()
+        self.lable_info_text()
         if len(self.addressbook.person_list) < 1:
             self.b_edit.config(text='Edit',command=self.main)
             self.b_delete.config(text='Delete',command=self.main)
@@ -358,18 +371,40 @@ class GUI:
                 self.person_add()
     def delete_entry_add_text(self):
         self.entry_add_firstName.delete(0,'end')
+        self.entry_add_firstName.config(background = "white")
+        
         self.entry_add_lastName.delete(0,'end')
+        self.entry_add_lastName.config(background = "white")
+        
         self.entry_add_address.delete(0,'end')
+        self.entry_add_address.config(background = "white")
+        
         self.entry_add_city.delete(0,'end')
+        self.entry_add_city.config(background = "white")
+        
         self.entry_add_state.delete(0,'end')
+        self.entry_add_state.config(background = "white")
+        
         self.entry_add_plz.delete(0,'end')
+        self.entry_add_plz.config(background = "white")
+        
         self.entry_add_phone.delete(0,'end')
+        self.entry_add_phone.config(background = "white")
     def delete_entry_edit_text(self):
         self.entry_edit_address.delete(0,'end')
+        self.entry_edit_address.config(background = "white")
+        
         self.entry_edit_city.delete(0,'end')
+        self.entry_edit_city.config(background = "white")
+        
         self.entry_edit_state.delete(0,'end')
+        self.entry_edit_state.config(background = "white")
+        
         self.entry_edit_plz.delete(0,'end')
+        self.entry_edit_plz.config(background = "white")
+        
         self.entry_edit_phone.delete(0,'end')
+        self.entry_edit_phone.config(background = "white")
     def edit_side(self):
         self.clear_design()
         if len(self.addressbook.person_list) < 1:
