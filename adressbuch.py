@@ -284,7 +284,7 @@ class GUI:
         self.b_add_save.grid(row=8,column=3)
     def check_entry(self,var,typ,entry,info):
         info_text ="Fängt nicht mit einem Großbuchstaben an oder das Feld ist leer"
-        info_zahl = "Besteht nicht nur aus Zahlen oder das Feld ist leer"
+        info_zahl = "Besteht nicht nur aus Zahlen oder das Feld ist leer oder im Feld befindet sich ein Leerzeichen"
         if typ == "state" or typ == "firstname" or typ == "lastname" or typ == "city":
             if var.replace(' ','').isalpha():
                 if var[0] == var[0].upper():
@@ -364,6 +364,8 @@ class GUI:
             check_phone = self.check_entry(phone,"phone",self.entry_add_phone,self.label_info_phone)
             
             if check_firstName == True and check_lastName == True and check_address == True and check_city == True and check_state == True and check_plz == True and check_phone == True:
+                firstName = firstName.replace(' ','')
+                lastName = lastName.replace(' ','')
                 self.addressbook.create_person(firstName,lastName,address,city,state,plz,phone)
                 self.delete_entry_add_text()
                 self.main()
