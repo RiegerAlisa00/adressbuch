@@ -286,7 +286,7 @@ class GUI:
         info_text ="Fängt nicht mit einem Großbuchstaben an oder das Feld ist leer"
         info_zahl = "Besteht nicht nur aus Zahlen oder das Feld ist leer"
         if typ == "state" or typ == "firstname" or typ == "lastname" or typ == "city":
-            if var.isalpha():
+            if var.replace(' ','').isalpha():
                 if var[0] == var[0].upper():
                     entry.config(background = "white")
                     info.config(fg = "black")
@@ -300,7 +300,7 @@ class GUI:
                 info.config(fg = "red",text=info_text)
                 return False
         elif typ == "address":
-            if var.isalnum():
+            if var.replace(' ','').isalnum():
                 if var[0] == var[0].upper():
                     entry.config(background = "white")
                     info.config(fg = "black")
