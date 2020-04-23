@@ -630,6 +630,7 @@ class Person:
         self.phone = phone
 
     def person_edit(self,adr,city,state,plz,phone):
+        #adress, city, state ,plz, phone werden bearbeitet
         self.address = adr
         self.city = city
         self.state = state
@@ -637,6 +638,7 @@ class Person:
         self.phone = phone
 
     def person_print(self):
+        #alle informationen der Person werden ausgegeben
         print(self.firstName)
         print(self.lastName)
         print(self.address)
@@ -647,21 +649,26 @@ class Person:
 
 class Addressbook:
     def __init__(self):
-        self.person_list = []
+        self.person_list = []#eine Liste wird erstellt
     def create_person(self,fname,lname,adr,city,state,plz,phone):
+        #die neu erstellte Person wird zur Liste hinzugefügt
         self.person_list.append(Person(fname,lname,adr,city,state,plz,phone))
     def print_person(self):
+        #die ganze Liste wird ausgegeben
         for i in self.person_list:
             i.person_print()
             print('')
     def sort_plz(self):
+        #die Liste wird nach der PLZ sortiert
         self.person_list.sort(key=lambda person: person.plz)
     def sort_name(self):
+        #die Liste wird nach dem Nachnamen sortiert
         self.person_list.sort(key=lambda person: person.lastName)
     def person_del(self,pos):
+        #eine Person wird aus der Liste gelöscht
         del self.person_list[pos]
 
-surface = Tk()
+surface = Tk()#es wird ein Fenster erstellt
 
-Addressbook = GUI(surface)
-Addressbook.menubar()
+Addressbook = GUI(surface)#ein Objekt wird erstellt
+Addressbook.menubar()#es wird das Menubar aufgerufen
