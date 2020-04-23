@@ -172,34 +172,35 @@ class GUI:
         self.label_info_phone.config(text="Telefonnummer"+info_zahl,fg = "black")
     """Hier ist das Hauptfenster, also die Buttons um Personen hinzuzufügen, bearbeiten und löschen, sowie die Listenbox nach Nachname oder Plz zu sortieren. Auch die Listenbox und den Inhalt der ausgewählten Person werden angezeigt"""   
     def main(self):
-        self.listbox_active()
-        self.surface.title(self.title)
-        self.clear_design()
-        self.delete_entry_add_text()
-        self.delete_entry_edit_text()
+        self.listbox_active()#es wird geschaut ob eine Person in der Listenbox makiert ist
+        self.surface.title(self.title)#der Fenstertitel wird aktualisiert
+        self.clear_design()#alles wird ausgeblendet
+        self.delete_entry_add_text()#die Inhalte der Eingabenfelder der Seite Person Add werden gelöscht, dass das Feld wider leer ist
+        self.delete_entry_edit_text()#die Inhalte der Eingabenfelder der Seite Person Add werden gelöscht, dass das Feld wider leer ist
         self.lable_info_text()
-        if len(self.addressbook.person_list) < 1:
+        if len(self.addressbook.person_list) < 1:#ist die Listbox leer kann man die Buttons Edit und Delete nicht verwenden
             self.b_edit.config(text='Edit',command=self.main)
             self.b_delete.config(text='Delete',command=self.main)
         else:
             self.b_edit.config(text='Edit',command=self.edit_side)
             self.b_delete.config(text='Delete',command=self.delete_function)
-        self.listbox.delete(0,'end')
+        self.listbox.delete(0,'end')#alter Listbox stand wird gelöscht
         self.b_add.config(text='Add',command=self.add_side)
         self.b_sort_name.config(text='Sort by name',command=self.name_sort)
         self.b_sort_plz.config(text='Sort by PLZ',command=self.plz_sort)
 
-        
+        """Scrollbar wird zur Listbox hinzugefügt"""
         self.listbox["yscrollcommand"]=self.scroll.set
         self.scroll["command"]=self.listbox.yview
-        for i in self.addressbook.person_list:
+        for i in self.addressbook.person_list:#die aktuelle Liste wird in der Listbox angezeigt
             name = i.firstName, i.lastName
             self.listbox.insert(END, name)
+        #positionierung der Listbox und Scrollbar
         self.listbox.grid(row=1,column=1,columnspan=4,sticky=N+E+S+W)
         self.scroll.grid(row=1,column=4, sticky=E+N+S)
-        self.listbox.bind("<<ListboxSelect>>",lambda x: self.listbox_active())
+        self.listbox.bind("<<ListboxSelect>>",lambda x: self.listbox_active())#wenn man auf Person in der Listbox wählt etwas passiert
         
-        
+        """Hier gebe ich die Positionen der Buttons und das Lable an"""
         self.label_info_person.grid(row=1,column=5,rowspan=4,columnspan=10)
 
 
@@ -216,8 +217,8 @@ class GUI:
    """Hier wird herrausgefunden welche Person ausgewählt wurde"""
     def listbox_active(self):
         try:
-            self.index = self.listbox.curselection()[0]
-            self.inhalt = self.addressbook.person_list[self.index]
+            self.index = self.listbox.curselection()[0]#gibt den Index der ausgewählten Person in der Liste an
+            self.inhalt = self.addressbook.person_list[self.index]#gibt die Informationen der ausgewählten Person in der Liste an
             self.edit_label_info_person_text()
         except IndexError:
             self.label_info_person.config(text='')
@@ -229,27 +230,28 @@ class GUI:
    """Hier wird die Seite wo ich Personen hinzufügen kann erstellt"""
     def add_side(self):
         self.clear_design()
-        self.label_add_firstName.config(text="Vorname")
-        self.label_add_firstName.grid(row=1,column=1)
+        self.label_add_firstName.config(text="Vorname")#hier wird der Textinhalt des Lables festgelegt
+        self.label_add_firstName.grid(row=1,column=1)#hier wird die Position des Lables festgelegt
 
-        self.label_add_lastName.config(text="Nachname")
-        self.label_add_lastName.grid(row=2,column=1)
+        self.label_add_lastName.config(text="Nachname")#hier wird der Textinhalt des Lables festgelegt
+        self.label_add_lastName.grid(row=2,column=1)#hier wird die Position des Lables festgelegt
 
-        self.label_add_address.config(text="Adresse")
+        self.label_add_address.config(text="Adresse")#hier wird der Textinhalt des Lables festgelegt
         self.label_add_address.grid(row=3,column=1)
 
-        self.label_add_city.config(text="Stadt")
-        self.label_add_city.grid(row=4,column=1)
+        self.label_add_city.config(text="Stadt")#hier wird der Textinhalt des Lables festgelegt
+        self.label_add_city.grid(row=4,column=1)#hier wird die Position des Lables festgelegt
 
-        self.label_add_state.config(text="Bundesland")
+        self.label_add_state.config(text="Bundesland")#hier wird der Textinhalt des Lables festgelegt
         self.label_add_state.grid(row=5,column=1)
 
-        self.label_add_plz.config(text="PLZ")
-        self.label_add_plz.grid(row=6,column=1)
+        self.label_add_plz.config(text="PLZ")#hier wird der Textinhalt des Lables festgelegt
+        self.label_add_plz.grid(row=6,column=1)#hier wird die Position des Lables festgelegt
 
-        self.label_add_phone.config(text="Telefonnummer")
-        self.label_add_phone.grid(row=7,column=1)
-
+        self.label_add_phone.config(text="Telefonnummer")#hier wird der Textinhalt des Lables festgelegt
+        self.label_add_phone.grid(row=7,column=1)#hier wird die Position des Lables festgelegt
+        
+        """Hier werden die Positionen der Eingabefelder festgelegt"""
         self.entry_add_firstName.grid(row=1,column=2)
 
         self.entry_add_lastName.grid(row=2,column=2)
@@ -294,8 +296,8 @@ class GUI:
         info_text ="Fängt nicht mit einem Großbuchstaben an oder das Feld ist leer"
         info_zahl = "Besteht nicht nur aus Zahlen oder das Feld ist leer oder im Feld befindet sich ein Leerzeichen"
         if typ == "state" or typ == "firstname" or typ == "lastname" or typ == "city":
-            if var.replace(' ','').isalpha():
-                if var[0] == var[0].upper():
+            if var.replace(' ','').isalpha():#alle Leerzeichen werden entfernt und es wird geschaut ob nur Buchstaben in der Eingabe sind
+                if var[0] == var[0].upper():#wird geschaut ob der 1. Buchstabe Großgeschrieben ist
                     entry.config(background = "white")
                     info.config(fg = "black")
                     return True
@@ -308,7 +310,7 @@ class GUI:
                 info.config(fg = "red",text=info_text)
                 return False
         elif typ == "address":
-            if var.replace(' ','').isalnum():
+            if var.replace(' ','').isalnum():#alle Leerzeichen werden entfernt und es wird geschaut ob Buchstaben und/oder Zahlen in der Eingabe sind
                 if var[0] == var[0].upper():
                     entry.config(background = "white")
                     info.config(fg = "black")
@@ -322,7 +324,7 @@ class GUI:
                 info.config(fg = "red",text=info_text)
                 return False
         elif typ == "plz":
-            if var.isnumeric():
+            if var.isnumeric():#wird geschaut ob nur Zahlen in der Eingabe sind
                 entry.config(background = "white")
                 info.config(fg = "black")
                 return var.isnumeric()
@@ -336,12 +338,6 @@ class GUI:
                 entry.config(background = "white")
                 info.config(fg = "black")
                 return True
-            #elif var.count("+") == 1 or var.count("/") == 1 or var.count("-") < 5:
-                #print(var.count("+"))
-                #print(var.count("/"))
-                #print(var.count("-"))
-                #entry.config(background = "black")
-                #return True
             elif var.isalnum():
                 entry.config(background = "red")
                 info.config(fg = "red",text=info_zahl)
@@ -361,6 +357,7 @@ class GUI:
         phone = self.entry_add_phone.get()
         
         if firstName =="" and lastName == "" and address == "" and city == "" and state == "" and plz == "" and phone == "":
+            #sind alle Engabefelder leer kommt man wieder zur Hauptseite und nichts wurde gespeichert
             self.main()
         else:
             check_firstName = self.check_entry(firstName,"firstname",self.entry_add_firstName,self.label_info_firstName)
