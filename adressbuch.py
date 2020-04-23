@@ -77,7 +77,7 @@ class GUI:
         
         """ Edit_Seite: Speicher Button """
         self.b_edit_save = Button(self.surface)
-        
+       """Alle inhalte werden im Fenster ausgeblendet""" 
     def clear_design(self):
         self.b_add.grid_forget()
         self.b_edit.grid_forget()
