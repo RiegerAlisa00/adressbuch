@@ -213,6 +213,7 @@ class GUI:
     def delete_function(self):
         self.addressbook.person_del(self.index)
         self.main()
+   """Hier wird herrausgefunden welche Person ausgewählt wurde"""
     def listbox_active(self):
         try:
             self.index = self.listbox.curselection()[0]
@@ -220,10 +221,12 @@ class GUI:
             self.edit_label_info_person_text()
         except IndexError:
             self.label_info_person.config(text='')
+   """Hier werden die ganzen Informatione der jeweiligen ausgewählten Person auf der Hauptseite an der Seite angezeigt"""
     def edit_label_info_person_text(self):
         text="Vorname: {}\nNachname: {}\nAdresse: {}\nStadt: {}\nBundesland: {}\nPLZ: {}\nTelefonnummer: {}\n".format(self.inhalt.firstName,self.inhalt.lastName,self.inhalt.address,self.inhalt.city,self.inhalt.state,self.inhalt.plz,self.inhalt.phone)
         self.label_info_person.config(text=text,justify=LEFT,font=13)
         #self.label_info_person["anchor"] = W
+   """Hier wird die Seite wo ich Personen hinzufügen kann erstellt"""
     def add_side(self):
         self.clear_design()
         self.label_add_firstName.config(text="Vorname")
@@ -286,6 +289,7 @@ class GUI:
 
         self.b_add_save.config(text="Speichern",command=self.person_add)
         self.b_add_save.grid(row=8,column=3)
+   """Hier werden die Eingaben geprüft ob sie passen"""
     def check_entry(self,var,typ,entry,info):
         info_text ="Fängt nicht mit einem Großbuchstaben an oder das Feld ist leer"
         info_zahl = "Besteht nicht nur aus Zahlen oder das Feld ist leer oder im Feld befindet sich ein Leerzeichen"
@@ -346,7 +350,7 @@ class GUI:
                 entry.config(background = "red")
                 info.config(fg = "red",text=info_zahl)
                 return False
-                
+   """Hier werden die Eingaben von der Seite wo man Personen erstellen kann bearbeiten bzw. in die Person wird erstellt"""             
     def person_add(self):
         firstName = self.entry_add_firstName.get()
         lastName = self.entry_add_lastName.get()
@@ -375,6 +379,7 @@ class GUI:
                 self.main()
             else:
                 self.person_add()
+    """Hier werden die Inhalte der Eingabenfelder der Seite Person hinzufügen gelöscht, so das die Eingabenfelder wierder leer sind"""
     def delete_entry_add_text(self):
         self.entry_add_firstName.delete(0,'end')
         self.entry_add_firstName.config(background = "white")
@@ -396,6 +401,7 @@ class GUI:
         
         self.entry_add_phone.delete(0,'end')
         self.entry_add_phone.config(background = "white")
+   """Hier werden die Inhalte der Eingabenfelder der Seite Person bearbeiten gelöscht, so das die Eingabenfelder wierder leer sind"""
     def delete_entry_edit_text(self):
         self.entry_edit_address.delete(0,'end')
         self.entry_edit_address.config(background = "white")
@@ -411,6 +417,7 @@ class GUI:
         
         self.entry_edit_phone.delete(0,'end')
         self.entry_edit_phone.config(background = "white")
+    """Hier wird die Seite wo ich Personen bearbieten kann erstellt"""
     def edit_side(self):
         self.clear_design()
         if len(self.addressbook.person_list) < 1:
@@ -546,6 +553,7 @@ class GUI:
 
             self.b_edit_save.config(text="Speichern",command=self.main)
             self.b_edit_save.grid(row=8,column=3)
+    """Hier werden die Eingaben von der Seite wo man Personen bearbeiten kann bearbeiten""" 
     def person_edit(self):
         address = self.entry_edit_address.get()
         check_address = self.check_entry(address,"address",self.entry_edit_address,self.label_info_address)
@@ -568,6 +576,7 @@ class GUI:
             self.main()
         else:
             self.person_edit()
+    """"Hier wird das Objekt/Adressbuch als pickle Datei gespeichert"""
     def object_save_as(self):
         self.surface.filename =  filedialog.asksaveasfile(title = "Save file",defaultextension = '.pickle',filetypes = (("pickle files","*.pickle"),("all files","*.*")))
         self.object_file_path = self.surface.filename.name
@@ -576,7 +585,7 @@ class GUI:
         self.title_name(self.object_file_path)
         filehandler.close()
         self.main()
-
+    """"Hier wird das Objekt/Adressbuch als pickle Datei gespeichert oder die Datei wird aktualisiert"""
     def object_save(self):
         try:
             filehandler = open(self.object_file_path, 'wb') 
@@ -586,6 +595,7 @@ class GUI:
             self.main()
         except TypeError:
             self.object_save_as()
+    """"Hier wird ein schon exentiertes Objekt/Adressbuch geöffnet"""
     def object_open(self):
         self.surface.filename =  filedialog.askopenfilename(title = "Select file",filetypes = (("pickle files","*.pickle"),("all files","*.*")))
         self.object_file_path = self.surface.filename
@@ -593,6 +603,7 @@ class GUI:
         self.addressbook.person_list = pickle.load(read_file)
         self.title_name(self.surface.filename)
         self.main()
+    """"Hier wird ein neues Objekt/Adressbuch erstellt"""
     def object_new(self):
         self.object_file_path = None
         self.title = ''
@@ -602,6 +613,7 @@ class GUI:
         #self.index = None
         #self.inhalt = None
         self.main()
+    """Hier wird der Titel vom Fenster bearbeit, also umgändert in den Namen der Datei/Adressbuch"""
     def title_name(self,string):
         end = string.find(".pickle")
         start = string.rfind("/")
