@@ -77,19 +77,20 @@ class GUI:
         
         """ Edit_Seite: Speicher Button """
         self.b_edit_save = Button(self.surface)
-       """Alle inhalte werden im Fenster ausgeblendet""" 
+    """Alle inhalte werden im Fenster ausgeblendet""" 
     def clear_design(self):
+        """ Hauptseit: Buttons """
         self.b_add.grid_forget()
         self.b_edit.grid_forget()
         self.b_delete.grid_forget()
         self.b_sort_name.grid_forget()
         self.b_sort_plz.grid_forget()
-
+        """ Hauptseit: Listenbox """
         self.listbox.grid_forget()
         self.scroll.grid_forget()
-
+        """ Hauptseit: Label: Inhalt/Informationen der Person """
         self.label_info_person.grid_forget()
-
+        """Eingabe Informationen: Labels"""
         self.label_info_firstName.grid_forget()
         self.label_info_lastName.grid_forget()
         self.label_info_address.grid_forget()
@@ -97,7 +98,7 @@ class GUI:
         self.label_info_state.grid_forget()
         self.label_info_plz.grid_forget()
         self.label_info_phone.grid_forget()
-
+        """ Add_Seite: Labels """
         self.label_add_firstName.grid_forget()
         self.label_add_lastName.grid_forget()
         self.label_add_address.grid_forget()
@@ -105,7 +106,7 @@ class GUI:
         self.label_add_state.grid_forget()
         self.label_add_plz.grid_forget()
         self.label_add_phone.grid_forget()
-
+         """ Add_Seite: Entrys """
         self.entry_add_firstName.grid_forget()
         self.entry_add_lastName.grid_forget()
         self.entry_add_address.grid_forget()
@@ -113,9 +114,9 @@ class GUI:
         self.entry_add_state.grid_forget()
         self.entry_add_plz.grid_forget()
         self.entry_add_phone.grid_forget()
-
+        """ Add_Seite: Speicher Button """
         self.b_add_save.grid_forget()
-
+        """ Edit_Seite: Labels """
         self.label_edit_firstName.grid_forget()
         self.label_edit_lastName.grid_forget()
         self.label_edit_address.grid_forget()
@@ -123,21 +124,20 @@ class GUI:
         self.label_edit_state.grid_forget()
         self.label_edit_plz.grid_forget()
         self.label_edit_phone.grid_forget()
-
+        """ Edit_Seite: Labels wo Vorname und Nachname von der Person schon steht """
         self.label_edit_info_firstName.grid_forget()
-
         self.label_edit_info_lastName.grid_forget()
 
-
+        """ Edit_Seite: Entrys """
         self.entry_edit_address.grid_forget()
         self.entry_edit_city.grid_forget()
         self.entry_edit_state.grid_forget()
         self.entry_edit_plz.grid_forget()
         self.entry_edit_phone.grid_forget()
-
+        """ Edit_Seite: Speicher Button """
         self.b_edit_save .grid_forget()
 
-        
+   """Methode: wo die Menubar erstellt wird"""     
     def menubar(self):
         menubar = Menu(self.surface)
         filemenu = Menu(self.surface, tearoff=0)
@@ -151,13 +151,15 @@ class GUI:
 
 
         self.surface.config(menu=menubar)
+    """Hier wird die Methode aufgerufen, die Name in der Liste nach Nachnamen sortiert wird"""
     def name_sort(self):
         self.addressbook.sort_name()
         self.main()
-    
+     """Hier wird die Methode aufgerufen, die Name in der Liste nach PLZ sortiert wird"""
     def plz_sort(self):
         self.addressbook.sort_plz()
         self.main()
+     """Hier werden die Bedingungen für die Eingaben erstellt"""
     def lable_info_text(self):
         info_text = " muss mit einem Großbuchstaben anfangen"
         info_zahl = " darf nur aus Zahlen bestehen"
@@ -168,6 +170,7 @@ class GUI:
         self.label_info_state.config(text="Bundesland"+info_text,fg = "black")
         self.label_info_plz.config(text="PLZ"+info_zahl,fg = "black")
         self.label_info_phone.config(text="Telefonnummer"+info_zahl,fg = "black")
+    """Hier ist das Hauptfenster, also die Buttons um Personen hinzuzufügen, bearbeiten und löschen, sowie die Listenbox nach Nachname oder Plz zu sortieren. Auch die Listenbox und den Inhalt der ausgewählten Person werden angezeigt"""   
     def main(self):
         self.listbox_active()
         self.surface.title(self.title)
@@ -206,6 +209,7 @@ class GUI:
         self.b_delete.grid(row=5,column=3,padx=10,pady=50)
         self.b_sort_name.grid(row=5,column=4,padx=10,pady=50)
         self.b_sort_plz.grid(row=5,column=5,padx=10,pady=50)
+    """Hier wird die Methode aufgerufen um die Person zu löschen"""
     def delete_function(self):
         self.addressbook.person_del(self.index)
         self.main()
